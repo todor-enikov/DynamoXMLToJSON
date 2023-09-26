@@ -36,8 +36,6 @@ namespace DynamoXMLToJSON.Controllers
             {
                 string message = $"The end point returned exception with message: {ex.Message}";
                 return BadRequest(message);
-
-                throw new InvalidOperationException(message);
             }
         }
     }
