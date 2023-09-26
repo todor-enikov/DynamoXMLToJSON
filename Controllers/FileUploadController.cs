@@ -19,16 +19,26 @@ namespace DynamoXMLToJSON.Controllers
         [Route("api/XMLToJSON")]
         public async Task<ActionResult> XMLToJSON([FromBody] XElement xml, [FromHeader] string fileName)
         {
-            // Convert to XmlNode
-            XmlReader xmlReader = xml.CreateReader();
-            XmlDocument doc = new XmlDocument();
-            doc.Load(xmlReader);
+            try
+            {
+                // Convert to XmlNode
+                XmlReader xmlReader = xml.CreateReader();
+                XmlDocument doc = new XmlDocument();
+                doc.Load(xmlReader);
 
-            string jsonText = JsonConvert.SerializeXmlNode(doc);
+                string jsonText = JsonConvert.SerializeXmlNode(doc);
 
-            await this.fileOperationService.SaveResultToFile(jsonText, fileName);
+                await this.fileOperationService.SaveResultToFile(jsonText, fileName);
 
-            return RedirectToAction(nameof(Index));
+                return Ok($"The operation of saving {fileName} completed successfully.");
+            }
+            catch (Exception ex)
+            {
+                string message = $"The end point returned exception with message: {ex.Message}";
+                return BadRequest(message);
+
+                throw new InvalidOperationException(message);
+            }
         }
     }
 }
